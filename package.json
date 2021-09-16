@@ -1,0 +1,29 @@
+{
+    "name": "@jesseburke/three-scene-with-react",
+    "version": "0.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "delaunator": "^5.0.0",
+        "emotion": "^10.0.27"
+    },
+    "peerDependencies": {
+        "@jesseburke/basic-utils": "^0.0.1",
+        "@jesseburke/components": "^0.0.1",
+        "@jesseburke/jotai-data-setup": "^0.0.0",
+        "@jesseburke/math-utils": "^0.0.0",
+        "jotai": ">=0.16.8",
+        "react": ">=16.8",
+        "three": ">= 0.125.2"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.3.4",
+        "postcss": "^8.3.6",
+        "tailwindcss": "^2.2.15"
+    }
+}
