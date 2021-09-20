@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mergeBufferGeometries } from './MergeGeometries';
 
 // output has middle at origin; arrow is parallel to y-axis
 // base of arrow is at (0, -length/2) and tip of arrow is at (0, length/2)
@@ -55,7 +55,7 @@ function RawArrowGeom({ baseLength, baseRadius, tipLength, tipRadius }) {
 
     let geometries = [base, tip];
 
-    const arrowGeom = BufferGeometryUtils.mergeBufferGeometries(geometries);
+    const arrowGeom = mergeBufferGeometries(geometries);
 
     // move so origin is through center of arrow
     //arrowGeom.translate(0, -(baseLength + tipLength)/2, 0);

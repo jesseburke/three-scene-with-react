@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mergeBufferGeometries } from './MergeGeometries';
 
 import CurvedPathGeom from './CurvedPathGeom.jsx';
 
@@ -19,7 +19,7 @@ export default function FunctionGraph2DGeom({
 
     let compArray = curveComps({ bounds, func, approxH });
 
-    return BufferGeometryUtils.mergeBufferGeometries(
+    return mergeBufferGeometries(
         compArray.map((c) =>
             CurvedPathGeom({ ptArray: c, tubularSegments, radius, radialSegments })
         )

@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 // ptArray is an array of THREE.Vector3's to be drawn
 export default function CurvedPathGeom({

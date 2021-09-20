@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mergeBufferGeometries } from './MergeGeometries';
 
 // position is the radius of the circle this is a piece of
 export function circularArrowGeom({
@@ -24,7 +24,7 @@ export function circularArrowGeom({
     const tipGeom2 = new THREE.CylinderBufferGeometry(meshRadius, meshRadius, tipLength)
         .translate(0, -tipLength / 2, 0)
         .rotateZ(arrowAngle / 2);
-    const tipGeom = BufferGeometryUtils.mergeBufferGeometries([tipGeom1, tipGeom2]);
+    const tipGeom = mergeBufferGeometries([tipGeom1, tipGeom2]);
 
     let epsilon = 0;
     if (reversed) {
@@ -40,28 +40,12 @@ export function circularArrowGeom({
             0
         );
 
-    const geom = BufferGeometryUtils.mergeBufferGeometries([torusGeom, tipGeom]);
+    const geom = mergeBufferGeometries([torusGeom, tipGeom]);
 
     geom.rotateZ(vecAngle);
 
     //const sphereGeom = new THREE.SphereBufferGeometry( .5 );
     //sphereGeom.translate( position*Math.cos( angle/2), position*Math.sin(angle/2), 0);
 
-    return geom; //BufferGeometryUtils.mergeBufferGeometries([torusGeom, tipGeom]);
-}
-
-export function rotatedArrowheadMesh({
-    x,
-    y,
-    angle,
-    meshRadius = 0.04,
-    color = 0xc14cc0,
-    reversed = false
-}) {
-    const geom = rotatedArrowheadGeom({ x, y, angle, meshRadius, reversed });
-
-    const material = new THREE.MeshBasicMaterial({ color, opacity: 1 });
-    material.transparent = false;
-
-    return new THREE.Mesh(geom, material);
+    return geom; //mergeBufferGeometries([torusGeom, tipGeom]);
 }

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mergeBufferGeometries } from './MergeGeometries';
 
 import ArrowGeom from './ArrowGeom.js';
 
@@ -32,12 +32,12 @@ export default function ArrowGridGeom({
         const ag = ArrowGeom({ length: arrowLength, thickness: arrowThickness });
         const sg = new THREE.SphereBufferGeometry(0.1, 15, 15);
 
-        const g = BufferGeometryUtils.mergeBufferGeometries([ag, sg]);
+        const g = mergeBufferGeometries([ag, sg]);
 
         return g.rotateZ(theta - Math.PI / 2).translate(x, y, zHeightFunc(a, b));
     });
 
-    const geom = BufferGeometryUtils.mergeBufferGeometries(geomArray);
+    const geom = mergeBufferGeometries(geomArray);
     const c = gridSqSize;
     geom.scale(c, c, 1);
     geom.translate(xMin, yMin, 0);

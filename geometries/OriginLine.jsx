@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mergeBufferGeometries } from './MergeGeometries';
 
 export default function OriginLine({
     vec,
@@ -15,7 +15,7 @@ export default function OriginLine({
     newVec.multiplyScalar(length);
 
     // make the line geometry; goes two directions from origin
-    const geometry = BufferGeometryUtils.mergeBufferGeometries([
+    const geometry = mergeBufferGeometries([
         new THREE.TubeBufferGeometry(
             new THREE.LineCurve3(newVec, new THREE.Vector3(0, 0, 0)),
             tubularSegments,

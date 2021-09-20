@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.jsx';
+import { mergeBufferGeometries } from './MergeGeometries';
 
 const defaultRadius = 0.075;
 const defaultVertexSize = 2;
@@ -45,7 +45,7 @@ export default function LinePathGeom(
     );
     sphereArr.push(tubeGeometry);
 
-    return BufferGeometryUtils.mergeBufferGeometries(sphereArr);
+    return mergeBufferGeometries(sphereArr);
 }
 
 export function RegularNgon(n, radius = defaultRadius, vertexSize = defaultVertexSize) {

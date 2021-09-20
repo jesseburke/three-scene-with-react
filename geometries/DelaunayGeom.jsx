@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mergeBufferGeometries } from './MergeGeometries';
 
 import Delaunator from 'delaunator';
 
@@ -31,7 +31,7 @@ export default function DelaunayGeometry(triangulation, pointRadius = 0.075, lin
         new THREE.SphereBufferGeometry(pointRadius, 32, 32).translate(p[0], p[1], 0)
     );
 
-    //const pointGeom = BufferGeometryUtils.mergeBufferGeometries(pointGeomArray);
+    //const pointGeom = mergeBufferGeometries(pointGeomArray);
 
     let trianglePath;
 
@@ -50,5 +50,5 @@ export default function DelaunayGeometry(triangulation, pointRadius = 0.075, lin
         );
     }
 
-    return BufferGeometryUtils.mergeBufferGeometries(triangleGeomArray.concat(pointGeomArray));
+    return mergeBufferGeometries(triangleGeomArray.concat(pointGeomArray));
 }
