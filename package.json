@@ -9,17 +9,14 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "delaunator": "^5.0.0",
-        "emotion": "^10.0.27"
-    },
-    "peerDependencies": {
         "@jesseburke/basic-utils": "^0.0.1",
         "@jesseburke/components": "^0.0.1",
-        "@jesseburke/jotai-data-setup": "^0.0.0",
-        "@jesseburke/math-utils": "^0.0.0",
-        "jotai": ">=0.16.8",
-        "react": ">=16.8",
-        "three": ">= 0.125.2"
+        "@jesseburke/math": "^0.1.0",
+        "delaunator": "^5.0.0",
+        "emotion": "^10.0.27",
+        "jotai": "^0.16.11",
+        "react": "^16.14.0",
+        "three": "^0.132.2"
     },
     "devDependencies": {
         "autoprefixer": "^10.3.4",
