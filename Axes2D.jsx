@@ -3,7 +3,7 @@ import React, { memo, useEffect } from 'react';
 import { useAtom, atom } from 'jotai';
 
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mergeBufferGeometries } from './geometries/MergeGeometries';
 
 const defaultLabelAtom = atom({ x: 'x', y: 'y' });
 
@@ -94,7 +94,7 @@ export default memo(function Axes2D({
                 tickGeomArray.push(RawTickGeometry(radius * tickRadiusMultiple).translate(0, i, 0));
             }
 
-            const tickGeom = BufferGeometryUtils.mergeBufferGeometries(tickGeomArray);
+            const tickGeom = mergeBufferGeometries(tickGeomArray);
             const tickMaterial = new THREE.MeshBasicMaterial({ color: color });
             axesGroup.add(new THREE.Mesh(tickGeom, tickMaterial));
 

@@ -18,3 +18,9 @@ export { default as ThreeSceneComp, useThreeCBs } from './ThreeScene';
 export { default as ThreeSceneFactory } from './ThreeSceneFactory';
 
 export { default as LinePathGeom, RegularNgonPts, IrregularNgon } from './geometries/LinePathGeom';
+
+export { default as TranslateAnimWrapper } from './animations/TranslateAnimWrapper';
+export { default as gsapReflect } from './animations/gsapReflect';
+export { default as gsapRotate } from './animations/gsapRotate';
+export { default as gsapTextAnimation } from './animations/gsapTextAnimation';
+export { default as gsapTranslate } from './animations/gsapTranslate';

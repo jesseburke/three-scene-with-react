@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { atom, useAtom } from 'jotai';
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
+import { mergeBufferGeometries } from './geometries/MergeGeometries';
 
 import { Button } from '@jesseburke/components';
 
@@ -82,7 +82,7 @@ function GraphDrawComp(
                     mainMeshRef.current = newMesh;
                     threeCBs.add(mainMeshRef.current);
                 } else {
-                    mainMeshRef.current.geometry = BufferGeometryUtils.mergeBufferGeometries(
+                    mainMeshRef.current.geometry = mergeBufferGeometries(
                         [mainMeshRef.current.geometry, newMesh.geometry].filter((e) => e)
                     );
                 }
@@ -93,7 +93,7 @@ function GraphDrawComp(
                     fixedMeshRef.current.material = fixedMaterial;
                     threeCBs.add(fixedMeshRef.current);
                 } else {
-                    fixedMeshRef.current.geometry = BufferGeometryUtils.mergeBufferGeometries(
+                    fixedMeshRef.current.geometry = mergeBufferGeometries(
                         [fixedMeshRef.current.geometry, newMesh.geometry].filter((e) => e)
                     );
                 }
@@ -242,7 +242,7 @@ function GraphDrawFactory({
             const newCopies = transforms.map((t) => t.transformGeometry(sphereGeom));
             newCopies.push(sphereGeom);
 
-            sphereGeom = BufferGeometryUtils.mergeBufferGeometries(newCopies);
+            sphereGeom = mergeBufferGeometries(newCopies);
         }
 
         const sphereMesh = new THREE.Mesh(sphereGeom, material);
@@ -269,7 +269,7 @@ function GraphDrawFactory({
             const newCopies = transforms.map((t) => t.transformGeometry(tubeGeom));
             newCopies.push(tubeGeom);
 
-            tubeGeom = BufferGeometryUtils.mergeBufferGeometries(newCopies);
+            tubeGeom = mergeBufferGeometries(newCopies);
         }
 
         const tubeMesh = new THREE.Mesh();
@@ -370,9 +370,7 @@ function MeshArrayFactory({ startingArray = [] }) {
 
         const material = meshArray[0].material;
 
-        const geometry = BufferGeometryUtils.mergeBufferGeometries(
-            meshArray.map((m) => m.geometry)
-        );
+        const geometry = mergeBufferGeometries(meshArray.map((m) => m.geometry));
 
         return new THREE.Mesh(geometry, material);
     }

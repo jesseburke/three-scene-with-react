@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect, useLayoutEffect, useCallback } from
 import { atom, useAtom } from 'jotai';
 
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 import FunctionGraph2DGeom from './geometries/FunctionGraph2DGeom.js';
 

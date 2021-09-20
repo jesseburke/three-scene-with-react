@@ -3,7 +3,7 @@ import React, { memo, useEffect } from 'react';
 import { useAtom, atom } from 'jotai';
 
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mergeBufferGeometries } from './geometries/MergeGeometries';
 
 const defaultLabelAtom = atom({ x: 'x', y: 'y', z: 'z' });
 
@@ -105,7 +105,7 @@ export default memo(function Axes3D({
             }
 
             // am not using tickColor for now
-            const tickGeom = BufferGeometryUtils.mergeBufferGeometries(tickGeomArray);
+            const tickGeom = mergeBufferGeometries(tickGeomArray);
             const tickMaterial = new THREE.MeshBasicMaterial({ color: color });
             axesGroup.add(new THREE.Mesh(tickGeom, tickMaterial));
 

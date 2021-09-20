@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { atom, useAtom } from 'jotai';
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
+import { mergeBufferGeometries } from './geometries/MergeGeometries';
 
 import { Button } from '@jesseburke/components';
 
@@ -82,7 +82,7 @@ function FreeDrawComp(
                     mainMeshRef.current = newMesh;
                     threeCBs.add(mainMeshRef.current);
                 } else {
-                    mainMeshRef.current.geometry = BufferGeometryUtils.mergeBufferGeometries(
+                    mainMeshRef.current.geometry = mergeBufferGeometries(
                         [mainMeshRef.current.geometry, newMesh.geometry].filter((e) => e)
                     );
                 }
@@ -93,7 +93,7 @@ function FreeDrawComp(
                     fixedMeshRef.current.material = fixedMaterial;
                     threeCBs.add(fixedMeshRef.current);
                 } else {
-                    fixedMeshRef.current.geometry = BufferGeometryUtils.mergeBufferGeometries(
+                    fixedMeshRef.current.geometry = mergeBufferGeometries(
                         [fixedMeshRef.current.geometry, newMesh.geometry].filter((e) => e)
                     );
                 }
@@ -222,7 +222,7 @@ function FreeDrawFactory({
             const newCopies = transforms.map((t) => t(curGeom));
             newCopies.push(curGeom);
 
-            curGeom = BufferGeometryUtils.mergeBufferGeometries(newCopies);
+            curGeom = mergeBufferGeometries(newCopies);
         }
         curGeomArray.push(curGeom);
 
@@ -240,7 +240,7 @@ function FreeDrawFactory({
         let curCompGeom;
 
         if (curGeomArray.length > 0) {
-            curCompGeom = BufferGeometryUtils.mergeBufferGeometries(curGeomArray);
+            curCompGeom = mergeBufferGeometries(curGeomArray);
 
             // add it to the array of components
             compGeomArray.push(curCompGeom);
@@ -268,7 +268,7 @@ function FreeDrawFactory({
                 const newCopies = transforms.map((t) => t(curCompGeom));
                 newCopies.push(curCompGeom);
 
-                curCompGeom = BufferGeometryUtils.mergeBufferGeometries(newCopies);
+                curCompGeom = mergeBufferGeometries(newCopies);
             }
 
             compGeomArray.push(curCompGeom);
@@ -318,7 +318,7 @@ function FreeDrawFactory({
             return undefined;
         }
 
-        totalGeom = BufferGeometryUtils.mergeBufferGeometries(compGeomArray);
+        totalGeom = mergeBufferGeometries(compGeomArray);
 
         return new THREE.Mesh(totalGeom, material);
     }

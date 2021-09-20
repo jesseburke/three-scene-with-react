@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { atom, useAtom } from 'jotai';
 
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 import FunctionGraph3DGeom from './geometries/FunctionGraph3DGeom.js';
 
@@ -42,7 +41,7 @@ export default function FunctionGraph3D({
         //material.opacity = .6;
         //material.wireframe = true;
 
-        BufferGeometryUtils.computeTangents(geometry);
+        //computeTangents(geometry);
 
         const mesh = new THREE.Mesh(geometry, material);
         threeCBs.add(mesh);
