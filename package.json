@@ -9,14 +9,14 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "delaunator": "^5.0.0",
-        "emotion": "^10.0.27"
-    },
-    "peerDependencies": {
         "@jesseburke/basic-utils": "latest",
         "@jesseburke/components": "latest",
         "@jesseburke/jotai-data-setup": "latest",
         "@jesseburke/math-utils": "latest",
+	"delaunator": "^5.0.0",
+        "emotion": "^10.0.27"
+    },
+    "peerDependencies": {
         "jotai": ">=0.16.8",
         "react": ">=16.8",
         "three": ">= 0.125.2"
