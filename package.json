@@ -9,11 +9,8 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@jesseburke/basic-utils": "latest",
-        "@jesseburke/components": "latest",
-        "@jesseburke/jotai-data-setup": "latest",
-        "@jesseburke/math-utils": "latest",
-	"delaunator": "^5.0.0",
+        "@jesseburke/basic-utils": "^0.0.1",
+        "delaunator": "^5.0.0",
         "emotion": "^10.0.27"
     },
     "peerDependencies": {

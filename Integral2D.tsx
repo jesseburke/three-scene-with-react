@@ -5,7 +5,7 @@ import { atom, useAtom, PrimitiveAtom } from 'jotai';
 import * as THREE from 'three';
 
 import IntegralCurveGeom from './geometries/IntegralCurveGeom.js';
-import DraggableSphere from './DraggableSphere.jsx';
+import DraggableSphere from './interactive-components/DraggableSphere.jsx';
 
 import { ArrayPoint2, Bounds, CurveData2 } from '../../src/my-types';
 

@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { atom, useAtom } from 'jotai';
 import * as THREE from 'three';
-import { mergeBufferGeometries } from './geometries/MergeGeometries';
+import { mergeBufferGeometries } from '../geometries/MergeGeometries';
 
 import { Button } from '@jesseburke/components';
 

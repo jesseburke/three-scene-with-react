@@ -1,6 +1,6 @@
-module.exports = {
+module.exports = {    
     mode: 'jit',
-    purge: ['./*.html', './*.js', './*.tsx', './*.jsx', './*.ts'],
+    purge: ['./*.html', './*.js', './*.tsx', './*.jsx', './*.ts', './**/*.html', './**/*.js', './**/*.tsx', './**/*.jsx', './**/*.ts'],
     darkMode: false, // or 'media' or 'class'
     theme: {
         screens: {

@@ -6,7 +6,7 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
 //import GLTFExporter from 'three-gltf-exporter';
 
-import LabelMaker from './LabelMaker';
+import htmlLabelMaker from './labels/htmlLabelMaker';
 
 import { pubsub } from '@jesseburke/basic-utils';
 import { LabelStyle, LabelProps, ArrayPoint3 } from '../../src/my-types';
@@ -238,7 +238,7 @@ export default function ThreeSceneFactory({
     };
 
     if (!cameraDebug) {
-        labelMaker = LabelMaker(
+        labelMaker = htmlLabelMaker(
             labelContainerDiv,
             threeToHtmlCoordFuncFactory(camera),
             canvWidth,
