@@ -3,7 +3,7 @@ import React, { memo, useEffect } from 'react';
 import { useAtom, atom } from 'jotai';
 
 import * as THREE from 'three';
-import { mergeBufferGeometries } from './geometries/MergeGeometries';
+import { mergeBufferGeometries } from '../geometries/MergeGeometries';
 
 const defaultLabelAtom = atom({ x: 'x', y: 'y' });
 

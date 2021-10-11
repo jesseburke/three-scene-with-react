@@ -4,7 +4,7 @@ import { atom, useAtom } from 'jotai';
 
 import * as THREE from 'three';
 
-import FunctionGraph2DGeom from './geometries/FunctionGraph2DGeom.js';
+import FunctionGraph2DGeom from '../geometries/FunctionGraph2DGeom.js';
 
 export default function FunctionGraph2D({ threeCBs, funcAtom, boundsAtom, curveOptionsAtom }) {
     const func = useAtom(funcAtom)[0];

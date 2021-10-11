@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { atom, useAtom } from 'jotai';
 
-import GridGeom from './geometries/GridGeom.js';
+import GridGeom from '../geometries/GridGeom.js';
 import { ArrayPoint2, Bounds } from '../../src/my-types';
 
 export interface GridProps {

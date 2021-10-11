@@ -3,7 +3,7 @@ import { atom, useAtom } from 'jotai';
 
 import * as THREE from 'three';
 
-import { circularArrowGeom } from './geometries/CircularArrowGeom.jsx';
+import { circularArrowGeom } from '../geometries/CircularArrowGeom.jsx';
 
 //------------------------------------------------------------------------
 //
