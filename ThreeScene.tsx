@@ -8,7 +8,6 @@ import React, {
     cloneElement
 } from 'react';
 import * as THREE from 'three';
-import { atom, useAtom } from 'jotai';
 
 import ThreeSceneFactory from './ThreeSceneFactory';
 import { ArrayPoint3 } from '../../src/my-types';
@@ -28,8 +27,6 @@ export interface ThreeSceneProps {
     photoButtonClassStr: string;
     children: null;
 }
-
-export const ThreeCBsContext = React.createContext({});
 
 const ThreeScene: FunctionComponent = (
     {
@@ -53,30 +50,28 @@ const ThreeScene: FunctionComponent = (
     },
     ref
 ) => {
+    // will hold ref to canvas element where three scene is rendered
     const threeCanvasRef = useRef(null);
+
+    // will hold ref to div element where html labels are rendered
     const labelContainerRef = useRef(null);
 
     //------------------------------------------------------------------------
     //
-    // make sure that canvas height and width are same as the html element
+    // this is needed to get threejs to render initially
 
-    const [initialHeightPxs, setInitialHeightPxs] = useState(0);
-    const [initialWidthPxs, setInitialWidthPxs] = useState(0);
+    const [canvasHeight, setCanvasHeight] = useState(0);
 
     useEffect(() => {
         if (threeCanvasRef && threeCanvasRef.current) {
             const height = threeCanvasRef.current.offsetHeight;
-            const width = threeCanvasRef.current.offsetWidth;
-            const pixelRatio = window.devicePixelRatio;
 
-            if (height === 0 || width === 0) {
+            if (height === 0) {
                 requestAnimationFrame(() => {
-                    setInitialHeightPxs(threeCanvasRef.current.offsetHeight);
-                    setInitialWidthPxs(threeCanvasRef.current.offsetWidth);
+                    setCanvasHeight(threeCanvasRef.current.offsetHeight);
                 });
             } else {
-                setInitialHeightPxs(height * pixelRatio);
-                setInitialWidthPxs(width * pixelRatio);
+                setCanvasHeight(height);
             }
         }
     }, [threeCanvasRef]);
@@ -91,12 +86,7 @@ const ThreeScene: FunctionComponent = (
     const [threeSceneCBs, setThreeSceneCBs] = useState(null);
 
     useEffect(() => {
-        if (!threeCanvasRef.current) {
-            setThreeSceneCBs(null);
-            return;
-        }
-
-        if (initialHeightPxs === 0 || initialWidthPxs === 0) {
+        if (!threeCanvasRef.current || canvasHeight === 0) {
             setThreeSceneCBs(null);
             return;
         }
@@ -104,7 +94,7 @@ const ThreeScene: FunctionComponent = (
         if (cameraDebug) {
             setThreeSceneCBs(
                 ThreeSceneFactory({
-                    drawCanvas: threeCanvasRef.current,
+                    canvasElt: threeCanvasRef.current,
                     labelContainerDiv: labelContainerRef.current,
                     fixedCameraData,
                     controlsData,
@@ -117,7 +107,7 @@ const ThreeScene: FunctionComponent = (
         } else {
             setThreeSceneCBs(
                 ThreeSceneFactory({
-                    drawCanvas: threeCanvasRef.current,
+                    canvasElt: threeCanvasRef.current,
                     labelContainerDiv: labelContainerRef.current,
                     fixedCameraData,
                     controlsData,
@@ -133,9 +123,44 @@ const ThreeScene: FunctionComponent = (
         cameraDebug,
         debugDiv1Ref,
         debugDiv2Ref,
-        initialHeightPxs,
-        initialWidthPxs
+        canvasHeight
     ]);
+
+    //----------------------------------------
+    //
+    // setup resize observer
+
+    useEffect(() => {
+        if (!threeSceneCBs || !threeSceneCBs.handleResize || !threeCanvasRef.current) return;
+
+        const resizeObserver = new ResizeObserver(threeSceneCBs.handleResize);
+        resizeObserver.observe(threeCanvasRef.current, { box: 'content-box' });
+
+        return () => {
+            if (resizeObserver && threeCanvasRef.current)
+                resizeObserver.unobserve(threeCanvasRef.current);
+        };
+    }, [threeSceneCBs, threeCanvasRef]);
+
+    //----------------------------------------
+    //
+    // subscribe to controlsPubSub
+
+    useEffect(() => {
+        if (!controlsCB || !threeSceneCBs) return;
+
+        threeSceneCBs.controlsPubSub.subscribe(controlsCB);
+    }, [controlsCB, threeSceneCBs]);
+
+    //----------------------------------------
+    //
+    // set width class string
+
+    const widthStr = halfWidth ? ' w-1/2' : ' w-full';
+
+    //----------------------------------------
+    //
+    // imperative escape hatch
 
     React.useImperativeHandle(
         ref,
@@ -202,38 +227,6 @@ const ThreeScene: FunctionComponent = (
 
     //----------------------------------------
     //
-    // setup resize observer
-
-    useEffect(() => {
-        if (!threeSceneCBs || !threeSceneCBs.handleResize || !threeCanvasRef.current) return;
-
-        const resizeObserver = new ResizeObserver(threeSceneCBs.handleResize);
-        resizeObserver.observe(threeCanvasRef.current, { box: 'content-box' });
-
-        return () => {
-            if (resizeObserver && threeCanvasRef.current)
-                resizeObserver.unobserve(threeCanvasRef.current);
-        };
-    }, [threeSceneCBs, threeCanvasRef]);
-
-    //----------------------------------------
-    //
-    // subscribe to controlsPubSub
-
-    useEffect(() => {
-        if (!controlsCB || !threeSceneCBs) return;
-
-        threeSceneCBs.controlsPubSub.subscribe(controlsCB);
-    }, [controlsCB, threeSceneCBs]);
-
-    //----------------------------------------
-    //
-    // set width class string
-
-    const widthStr = halfWidth ? ' w-1/2' : ' w-full';
-
-    //----------------------------------------
-    //
     // component used for camera debugging (showing two screens, with
     // the left one the usual scene and the right one a second camera
     // and camera help on the first camera)
@@ -253,33 +246,36 @@ const ThreeScene: FunctionComponent = (
         </div>
     )[0];
 
+    //----------------------------------------
+    //
+    // main component
+
     return (
-        <ThreeCBsContext.Provider value={threeSceneCBs}>
-            <div className={'absolute h-full bg-gray' + widthStr}>
-                <canvas
-                    className='h-full w-full block outline-none'
-                    ref={(elt) => (threeCanvasRef.current = elt)}
-                    width={initialWidthPxs}
-                    height={initialHeightPxs}
-                />
-                {cameraDebug ? cameraDebugComp : null}
-                <Fragment>
-                    {Children.map(children, (el) => cloneElement(el, { threeCBs: threeSceneCBs }))}
-                </Fragment>
-                <div ref={(elt) => (labelContainerRef.current = elt)} />
-                {photoButton ? (
-                    <div onClick={threeSceneCBs ? threeSceneCBs.downloadPicture : null}>
-                        <button className={photoBtnClassStr}>Photo</button>
-                    </div>
-                ) : null}
-            </div>
-        </ThreeCBsContext.Provider>
+        <div className={'absolute h-full bg-gray' + widthStr}>
+            <canvas
+                className='h-full w-full block outline-none'
+                ref={(elt) => (threeCanvasRef.current = elt)}
+            />
+            {cameraDebug ? cameraDebugComp : null}
+            <Fragment>
+                {Children.map(children, (el) => cloneElement(el, { threeCBs: threeSceneCBs }))}
+            </Fragment>
+            <div ref={(elt) => (labelContainerRef.current = elt)} />
+            {photoButton ? (
+                <div onClick={threeSceneCBs ? threeSceneCBs.downloadPicture : null}>
+                    <button className={photoBtnClassStr}>Photo</button>
+                </div>
+            ) : null}
+        </div>
     );
 };
 
 export default React.memo(React.forwardRef(ThreeScene));
 
-// should get rid of this as soon as possible
+//----------------------------------------
+//
+// imperative escape hatch
+
 export function useThreeCBs(threeRef) {
     const [threeCBs, setThreeCBs] = useState(null);
 
