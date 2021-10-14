@@ -1,0 +1,16 @@
+LabelMakers, of which there is one now, called htmlLabelMaker, take
+as arguments: labelContainerDiv, initCoordFunc, width, height, where
+initCoordFunc is a function that....
+
+LabelMakers should return an
+object of the form {addLabel, removeLabel, removeAllLabels,
+drawLabels, changeCoordFunc}, where addLabel expects an object of form
+{pos, text, style, anchor} and returns a string. removeLabel expects a
+string that was returned from addLabel, and removes the label that was
+added.
+
+What does changeCoordFunc do?
+
+[How does the remove function remove the corresponding div from labelContainerDiv?]
+
+What future LabelMakers could there be?

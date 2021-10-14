@@ -1,0 +1,37 @@
+Small personal library I use to write [[https://threejs.org][Three.js]] scenes, declaratively, using
+[[https://reactjs.org][React]] and the atomic state managment library [[https://github.com/pmndrs/jotai][jotai]]. Used in the apps...
+
+* How does it work?
+  
+  ThreeScene is a React component, whose underlying html element is the
+  canvas that Three renders into. The following example...
+
+
+  ThreeScene sets up... (more details)
+
+  Children of ThreeScene are passed useThreeCBs...
+
+  Some components provided, but
+
+  Components have a lot of flexibility in how they respond to changes
+  in the data. For instance, if a certain mesh with a very complicated
+  geometry takes color as a prop, the component can be written to keep
+  the geometry and only the change the material of the mesh, when the
+  color prop changes. This is also useful...for
+  animation... (example?)
+  
+  
+* Other features
+
+** Camera debug
+
+** Photos
+
+** Labels
+
+** Mouse picking
+
+** Controls interactions
+   camera interactivity?
+
+
