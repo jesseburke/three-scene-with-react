@@ -17,6 +17,23 @@ import './styles.css';
 //------------------------------------------------------------------------
 //
 
+// fixed means that controls don't change it
+const defaultFixedCameraData = {
+    up: [0, 0, 1],
+    near: 0.1,
+    far: 5000,
+    aspectRatio: window.innerWidth / window.innerHeight,
+    orthographic: false
+};
+
+const defaultControlsData = {
+    mouseButtons: { LEFT: THREE.MOUSE.ROTATE },
+    touches: { ONE: THREE.MOUSE.PAN, TWO: THREE.TOUCH.DOLLY, THREE: THREE.MOUSE.ROTATE },
+    enabled: true,
+    keyPanSpeed: 50,
+    screenSpaceSpanning: false
+};
+
 export interface ThreeSceneProps {
     controlsCB: (pt: ArrayPoint3) => null;
     fixedCameraData: null;
@@ -28,18 +45,16 @@ export interface ThreeSceneProps {
     children: null;
 }
 
+// fixedCameraData is data that isn't changed (by the controls or
+// input component), e.g.,
+// near and far. cameraDataAtom contains the data that is changed
+// (position and target)
+
 const ThreeScene: FunctionComponent = (
     {
         controlsCB = null,
-        fixedCameraData,
-        controlsData = {
-            mouseButtons: { LEFT: THREE.MOUSE.ROTATE },
-            touches: { ONE: THREE.MOUSE.ROTATE, TWO: THREE.TOUCH.PAN, THREE: THREE.MOUSE.DOLLY },
-            enableRotate: true,
-            enableKeys: true,
-            enabled: false,
-            keyPanSpeed: 50
-        },
+        fixedCameraData = defaultFixedCameraData,
+        controlsData = defaultControlsData,
         clearColor = '#f0f0f0',
         aspectRatio = 1,
         photoButton = false,
@@ -91,30 +106,32 @@ const ThreeScene: FunctionComponent = (
             return;
         }
 
-        if (cameraDebug) {
-            setThreeSceneCBs(
-                ThreeSceneFactory({
-                    canvasElt: threeCanvasRef.current,
-                    labelContainerDiv: labelContainerRef.current,
-                    fixedCameraData,
-                    controlsData,
-                    clearColor,
-                    cameraDebug,
-                    debugDiv1: debugDiv1Ref.current,
-                    debugDiv2: debugDiv2Ref.current
-                })
-            );
-        } else {
-            setThreeSceneCBs(
-                ThreeSceneFactory({
-                    canvasElt: threeCanvasRef.current,
-                    labelContainerDiv: labelContainerRef.current,
-                    fixedCameraData,
-                    controlsData,
-                    clearColor
-                })
-            );
-        }
+        const threeCBs = cameraDebug
+            ? ThreeSceneFactory({
+                  canvasElt: threeCanvasRef.current,
+                  labelContainerDiv: labelContainerRef.current,
+                  fixedCameraData,
+                  controlsData,
+                  clearColor,
+                  cameraDebug,
+                  debugDiv1: debugDiv1Ref.current,
+                  debugDiv2: debugDiv2Ref.current
+              })
+            : ThreeSceneFactory({
+                  canvasElt: threeCanvasRef.current,
+                  labelContainerDiv: labelContainerRef.current,
+                  fixedCameraData,
+                  controlsData,
+                  clearColor
+              });
+
+        setThreeSceneCBs(threeCBs);
+
+        return () => {
+            if (threeCBs) {
+                threeCBs.removeAllLabels();
+            }
+        };
     }, [
         threeCanvasRef,
         labelContainerRef,
@@ -234,12 +251,12 @@ const ThreeScene: FunctionComponent = (
     const cameraDebugComp = useState(
         <div className='absolute top-0 left-0 h-full w-full outline-none flex'>
             <div
-                className='h-full w-full'
+                className='h-full w-full border-r-4'
                 tabIndex='1'
                 ref={(elt) => (debugDiv1Ref.current = elt)}
             ></div>
             <div
-                className='h-full w-full'
+                className='h-full w-full relative'
                 tabIndex='2'
                 ref={(elt) => (debugDiv2Ref.current = elt)}
             ></div>

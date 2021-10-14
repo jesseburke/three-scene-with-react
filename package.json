@@ -4,12 +4,12 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+	 "build": "vite build"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@jesseburke/basic-utils": "^0.0.1",
         "delaunator": "^5.0.0",
         "emotion": "^10.0.27"
     },

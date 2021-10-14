@@ -7,14 +7,22 @@ import { mergeBufferGeometries } from '../geometries/MergeGeometries';
 
 const defaultLabelAtom = atom({ x: 'x', y: 'y', z: 'z' });
 
-const defaultAxesDataAtom = atom({
+const defaultAxesData = {
     radius: 0.01,
     color: '#0A2C3C',
     showLabels: true,
     tickDistance: 1,
     tickRadiusMultiple: 10,
-    tickLabelDistance: 2
-});
+    tickLabelDistance: 0,
+    labelStyle: {
+        color: '#0A2C3C',
+        padding: '.1em',
+        margin: '.5em',
+        fontSize: '1.5em'
+    }
+};
+
+const defaultAxesDataAtom = atom(defaultAxesData);
 
 export default memo(function Axes3D({
     threeCBs,
@@ -24,6 +32,8 @@ export default memo(function Axes3D({
     show = true,
     labelAtom = defaultLabelAtom
 }) {
+    const axesData = { ...defaultAxesData, ...useAtom(axesDataAtom)[0] };
+
     const {
         radius,
         color,
@@ -33,7 +43,7 @@ export default memo(function Axes3D({
         tickRadiusMultiple,
         tickLabelDistance,
         tickLabelStyle
-    } = useAtom(axesDataAtom)[0];
+    } = axesData;
 
     const { xMin, xMax, yMin, yMax, zMin, zMax } = useAtom(boundsAtom)[0];
 

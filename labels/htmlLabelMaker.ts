@@ -2,14 +2,24 @@ import { css } from 'emotion';
 
 import { OrthoCamera, LabelStyle, LabelProps, ArrayPoint3 } from '../../src/my-types';
 
+// what are the props for initCoordFunc?
+// why is it init?
+// threeToHtmlCoordFunc is an example of initCoordFunc argument
+
 export default function LabelMaker(labelContainerDiv, initCoordFunc, width, height) {
     //----------------------------------------
     //
     // set up labels
 
-    let threeLabelData: (LabelProps | null)[] = [];
+    // should threeLabelData be renamed?
+    // maybe, labelArray?
+
+    // labelData is {pos, text, style, anchor}
+
+    let labelStore = {};
     let labelCounter = 0;
 
+    // what is bind doing?
     let coordFunc = initCoordFunc.bind({});
 
     function addLabel({
@@ -25,13 +35,26 @@ export default function LabelMaker(labelContainerDiv, initCoordFunc, width, heig
         },
         anchor = 'ul'
     }: LabelProps) {
-        threeLabelData[labelCounter] = { pos, text, style, anchor };
+        labelStore[labelCounter] = { pos, text, style, anchor };
         labelCounter++;
         return labelCounter;
     }
 
-    function removeLabel(id: number) {
-        threeLabelData[id - 1] = null;
+    // following two should also remove the divs
+    function removeLabel(id) {
+        if (labelStore[id]) {
+            labelContainerDiv.removeChild(labelStore[id].div);
+            delete labelStore[id];
+        }
+    }
+
+    function removeAllLabels() {
+        Object.keys(labelStore).forEach((key) => {
+            if (labelStore[key] && labelStore[key].div)
+                labelContainerDiv.removeChild(labelStore[key].div);
+        });
+
+        labelStore = {};
     }
 
     function drawLabels() {
@@ -45,36 +68,38 @@ export default function LabelMaker(labelContainerDiv, initCoordFunc, width, heig
             labelContainerDiv.removeChild(labelContainerDiv.firstChild);
         }
 
-        const htmlLabelData: (LabelProps | null)[] = [];
+        const htmlLabelStore = {};
 
-        // following converts all coordinates of labels to html coordinates;
-        // if they are in the window, they are added to htmlLabelData
+        // converts coordinates of labels to html coordinates;
+        // if they are in the window, they are added to htmlLabelStore
         let x, y;
 
-        for (let key in threeLabelData) {
-            if (!threeLabelData[key] || !threeLabelData[key]!.pos) {
-                continue;
+        Object.keys(labelStore).forEach((key) => {
+            if (!labelStore[key] || !labelStore[key]!.pos) {
+                return;
             }
 
-            [x, y] = coordFunc(threeLabelData[key].pos);
+            [x, y] = coordFunc(labelStore[key].pos);
 
             if (0 < x && x < width && 0 < y && y < height) {
-                htmlLabelData[key] = { ...threeLabelData[key] };
-                htmlLabelData[key].pos = [x, y];
+                // make copy of labelStore[key]
+                htmlLabelStore[key] = { ...labelStore[key] };
+                // and change position to html
+                htmlLabelStore[key].pos = [x, y];
             }
-        }
+        });
 
         let workingDiv;
         let labelClass;
         let curStyleString;
         let anchor;
 
-        for (let key in htmlLabelData) {
+        Object.keys(htmlLabelStore).forEach((key) => {
             workingDiv = document.createElement('div');
-            workingDiv.textContent = htmlLabelData[key].text;
+            workingDiv.textContent = htmlLabelStore[key].text;
 
-            curStyleString = htmlLabelData[key].style;
-            anchor = htmlLabelData[key].anchor;
+            curStyleString = htmlLabelStore[key].style;
+            anchor = htmlLabelStore[key].anchor;
 
             switch (anchor) {
                 case 'ul':
@@ -86,8 +111,8 @@ export default function LabelMaker(labelContainerDiv, initCoordFunc, width, heig
                         position: absolute;
                         margin: 0;
                         user-select: none;
-                        left: ${htmlLabelData[key].pos[0]}px;
-                        top: ${htmlLabelData[key].pos[1]}px;
+                        left: ${htmlLabelStore[key].pos[0]}px;
+                        top: ${htmlLabelStore[key].pos[1]}px;
                         font-size: ${curStyleString.fontSize};
                         pointer-events: none;
                     `;
@@ -102,8 +127,8 @@ export default function LabelMaker(labelContainerDiv, initCoordFunc, width, heig
                         position: absolute;
                         margin: 0;
                         user-select: none;
-                        right: ${width - htmlLabelData[key].pos[0]}px;
-                        top: ${htmlLabelData[key].pos[1]}px;
+                        right: ${width - htmlLabelStore[key].pos[0]}px;
+                        top: ${htmlLabelStore[key].pos[1]}px;
                         font-size: ${curStyleString.fontSize};
                     `;
                     break;
@@ -117,8 +142,8 @@ export default function LabelMaker(labelContainerDiv, initCoordFunc, width, heig
                         position: absolute;
                         margin: 0;
                         user-select: none;
-                        right: ${width - htmlLabelData[key].pos[0]}px;
-                        top: ${htmlLabelData[key].pos[1]}px;
+                        right: ${width - htmlLabelStore[key].pos[0]}px;
+                        top: ${htmlLabelStore[key].pos[1]}px;
                         font-size: ${curStyleString.fontSize};
                     `;
                     break;
@@ -132,8 +157,8 @@ export default function LabelMaker(labelContainerDiv, initCoordFunc, width, heig
                         position: absolute;
                         margin: 0;
                         user-select: none;
-                        right: ${width - htmlLabelData[key].pos[0]}px;
-                        bottom: ${height - htmlLabelData[key].pos[1]}px;
+                        right: ${width - htmlLabelStore[key].pos[0]}px;
+                        bottom: ${height - htmlLabelStore[key].pos[1]}px;
                         font-size: ${curStyleString.fontSize};
                     `;
                     break;
@@ -147,8 +172,8 @@ export default function LabelMaker(labelContainerDiv, initCoordFunc, width, heig
                         position: absolute;
                         margin: 0;
                         user-select: none;
-                        left: ${htmlLabelData[key].pos[0]}px;
-                        bottom: ${htmlLabelData[key].pos[1]}px;
+                        left: ${htmlLabelStore[key].pos[0]}px;
+                        bottom: ${htmlLabelStore[key].pos[1]}px;
                         font-size: ${curStyleString.fontSize};
                     `;
                     break;
@@ -157,7 +182,8 @@ export default function LabelMaker(labelContainerDiv, initCoordFunc, width, heig
             workingDiv.classList.add(labelClass);
 
             labelContainerDiv.appendChild(workingDiv);
-        }
+            htmlLabelStore[key].div = workingDiv;
+        });
     }
 
     function changeCoordFunc(newFunc) {
@@ -165,5 +191,5 @@ export default function LabelMaker(labelContainerDiv, initCoordFunc, width, heig
         drawLabels();
     }
 
-    return { addLabel, removeLabel, drawLabels, changeCoordFunc };
+    return { addLabel, removeLabel, removeAllLabels, drawLabels, changeCoordFunc };
 }

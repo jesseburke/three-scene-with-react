@@ -4,7 +4,6 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls';
 
 import htmlLabelMaker from './labels/htmlLabelMaker';
 
-import { pubsub } from '@jesseburke/basic-utils';
 import { LabelStyle, LabelProps, ArrayPoint3 } from '../../src/my-types';
 
 export interface MouseButtons {
@@ -41,6 +40,7 @@ export default function ThreeSceneFactory({
     canvasElt,
     labelContainerDiv,
     fixedCameraData,
+    initCameraPosition = [10, 10, 10],
     clearColor = '#f0f0f0',
     controlsData,
     alpha = true,
@@ -68,7 +68,7 @@ export default function ThreeSceneFactory({
 
         canvHeight = canvasElt.offsetHeight;
         canvWidth = canvasElt.offsetWidth;
-        pixelRatio = window.devicePixelRatio;
+        pixelRatio = 1; //window.devicePixelRatio;
 
         height = canvHeight * pixelRatio;
         width = canvWidth * pixelRatio;
@@ -119,10 +119,11 @@ export default function ThreeSceneFactory({
         // camera is by default positioned at (0,0,0) and controls are targeted
         // at same point by default, which makes controls
         // unusable.
-        camera.position.set(1, 1, 1);
+        camera.position.set(...initCameraPosition);
 
         if (cameraDebug) {
             cameraForDebug = new THREE.PerspectiveCamera(fov, aspectRatio, near, far);
+            cameraForDebug.position.set(50, 50, 50);
         }
     } else {
         camera = new THREE.OrthographicCamera(
@@ -153,11 +154,15 @@ export default function ThreeSceneFactory({
 
     if (fixedCameraData.up) {
         camera.up = new THREE.Vector3(...fixedCameraData.up);
+
+        if (cameraForDebug) {
+            cameraForDebug.up = new THREE.Vector3(...fixedCameraData.up);
+        }
     }
 
     //----------------------------------------
     //
-    // set up lights
+    // set up some lights
 
     const color = 0xffffff;
     let intensity = 0.5;
@@ -178,6 +183,10 @@ export default function ThreeSceneFactory({
     const light2 = new THREE.AmbientLight(color, intensity);
     scene.add(light2);
 
+    const light3 = new THREE.DirectionalLight(color, intensity);
+    light3.position.set(0, 0, -1000);
+    scene.add(light3);
+
     //----------------------------------------
     //
     // set up controls
@@ -193,10 +202,10 @@ export default function ThreeSceneFactory({
     //     controls.update();
     // }
 
-    let controlsCamera2;
+    let controlsForDebugCamera;
 
     if (cameraDebug) {
-        controlsCamera2 = new OrbitControls(cameraForDebug, debugDiv2);
+        controlsForDebugCamera = new OrbitControls(cameraForDebug, debugDiv2);
     }
 
     let cameraHelper = new THREE.CameraHelper(camera);
@@ -205,6 +214,7 @@ export default function ThreeSceneFactory({
     //
     // labels
 
+    // what is the function signature?
     let labelMaker;
 
     // want to use this for different cameras, is why it's a factory
@@ -223,7 +233,7 @@ export default function ThreeSceneFactory({
                 (tempVector.x * 0.5 + 0.5) * canvWidth,
                 (tempVector.y * -0.5 + 0.5) * canvHeight
             ];
-            // in this case, only using left half of screen
+            // in this case, only using half of screen
         } else {
             return [
                 ((tempVector.x * 0.5 + 0.5) * canvWidth) / 2,
@@ -240,7 +250,12 @@ export default function ThreeSceneFactory({
             canvHeight
         );
     } else {
-        let lm1 = htmlLabelMaker(debugDiv1, threeToHtmlCoordFuncFactory(camera), width / 2, height);
+        let lm1 = htmlLabelMaker(
+            debugDiv1,
+            threeToHtmlCoordFuncFactory(camera),
+            canvWidth / 2,
+            canvHeight
+        );
         let lm2 = htmlLabelMaker(
             debugDiv2,
             threeToHtmlCoordFuncFactory(cameraForDebug),
@@ -253,12 +268,23 @@ export default function ThreeSceneFactory({
             lm2.addLabel(args);
         };
         const removeLabel = () => null;
+
+        const removeAllLabels = () => {
+            lm1.removeAllLabels();
+            lm2.removeAllLabels();
+        };
+
         const drawLabels = () => {
             lm1.drawLabels();
             lm2.drawLabels();
         };
 
-        labelMaker = { addLabel, removeLabel, drawLabels };
+        const changeCoordFunc = ([newFunc1, newFunc2]) => {
+            lm1.changeCoordFunc(newFunc1);
+            lm2.changeCoordFunc(newFunc2);
+        };
+
+        labelMaker = { addLabel, removeLabel, removeAllLabels, drawLabels, changeCoordFunc };
     }
 
     //----------------------------------------
@@ -368,8 +394,24 @@ export default function ThreeSceneFactory({
         controls.update();
         camera.updateProjectionMatrix();
 
-        labelMaker.changeCoordFunc(threeToHtmlCoordFuncFactory(camera));
+        if (cameraDebug) {
+            cameraForDebug.aspect = aspectRatio;
+            controlsForDebugCamera.update();
+            cameraForDebug.updateProjectionMatrix();
+        }
+
+        // what's happening with labelmaker in the debug case?
+        if (!cameraDebug) {
+            labelMaker.changeCoordFunc(threeToHtmlCoordFuncFactory(camera));
+        } else {
+            labelMaker.changeCoordFunc([
+                threeToHtmlCoordFuncFactory(camera),
+                threeToHtmlCoordFuncFactory(cameraForDebug)
+            ]);
+        }
+
         labelMaker.drawLabels();
+
         render();
     };
 
@@ -455,8 +497,8 @@ export default function ThreeSceneFactory({
     //
     // controls and related
 
-    if (controlsCamera2) {
-        controlsCamera2.addEventListener('change', () => {
+    if (controlsForDebugCamera) {
+        controlsForDebugCamera.addEventListener('change', () => {
             render();
         });
     }
@@ -509,6 +551,13 @@ export default function ThreeSceneFactory({
         camera.position.set(...newPosition);
         camera.updateProjectionMatrix();
         controls.update();
+
+        if (cameraDebug) {
+            controlsForDebugCamera.target = new THREE.Vector3(...newPosition);
+
+            controlsForDebugCamera.update();
+        }
+
         labelMaker.drawLabels();
         render();
     }
@@ -623,6 +672,8 @@ export default function ThreeSceneFactory({
             }
         }
 
+        // should remove divs from debugDiv1 and 2
+
         if (controls) controls.dispose();
 
         if (planeGeom) planeGeom.dispose();
@@ -702,4 +753,18 @@ function dataURIToBlob(dataURI) {
 function defaultFileName(ext) {
     const str = `${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}${ext}`;
     return str.replace(/\//g, '-').replace(/:/g, '.');
+}
+
+function pubsub() {
+    const subscribers = [];
+    return {
+        subscribe: function (subscriber) {
+            subscribers.push(subscriber);
+        },
+        publish: function (pubObj) {
+            subscribers.forEach(function (subscriber) {
+                subscriber(pubObj);
+            });
+        }
+    };
 }

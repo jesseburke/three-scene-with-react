@@ -4,8 +4,6 @@ import { atom, useAtom } from 'jotai';
 
 import * as THREE from 'three';
 
-import { useDebug } from '@jesseburke/basic-utils';
-
 const defaultVisibleAtom = atom(true);
 
 const defaultColor = '#0A2C3C';
@@ -28,8 +26,6 @@ export default function DraggableSphere({
     const [visible] = useAtom(visibleAtom);
 
     const zHeightFunc = useAtom(zHeightAtom)[0].func;
-
-    //useDebug([zHeightAtom]);
 
     //------------------------------------------------------------------------
     //
