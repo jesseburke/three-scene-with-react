@@ -10,8 +10,6 @@ import { atom, useAtom } from 'jotai';
 import * as THREE from 'three';
 import { mergeBufferGeometries } from '../../geometries/MergeGeometries';
 
-import { Button } from '@jesseburke/components';
-
 const graphDrawMaterial = new THREE.MeshBasicMaterial({
     color: new THREE.Color(0xc2374f),
     opacity: 1.0,
@@ -121,12 +119,20 @@ function GraphDrawComp(
 		    align-center justify-center cursor-pointer'
                 >
                     <div className='m-4'>
-                        <Button onClick={clearCB}>Clear Figure</Button>
+                        <button
+                            onClick={clearCB}
+                            className='px-4 py-2 border-2 text-center cursor-pointer'
+                        >
+                            Clear Figure
+                        </button>
                     </div>
                     <div className='m-4'>
-                        <Button className='m-4' onClick={undoCB}>
+                        <button
+                            onClick={undoCB}
+                            className='px-4 py-2 border-2 text-center cursor-pointer'
+                        >
                             Undo
-                        </Button>
+                        </button>
                     </div>
                 </div>
             ) : null}

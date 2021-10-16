@@ -10,8 +10,6 @@ import { atom, useAtom } from 'jotai';
 import * as THREE from 'three';
 import { mergeBufferGeometries } from '../../geometries/MergeGeometries';
 
-import { Button } from '@jesseburke/components';
-
 const freeDrawMaterial = new THREE.MeshBasicMaterial({
     color: new THREE.Color(0xc2374f),
     opacity: 1.0,
@@ -114,7 +112,12 @@ function FreeDrawComp(
             {active ? (
                 <div className='absolute bottom-20 left-20 text-xl'>
                     <div className='cursor-pointer'>
-                        <Button onClick={clearCB}>Clear Figure</Button>
+                        <button
+                            onClick={clearCB}
+                            className='px-4 py-2 border-2 text-center cursor-pointer m-4'
+                        >
+                            Clear Figure
+                        </button>
                     </div>
                 </div>
             ) : null}
