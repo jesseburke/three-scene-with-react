@@ -14,6 +14,8 @@ import {
 
 import { Input } from '@jesseburke/components';
 
+import '../../styles.css';
+
 const initAxesData = {
     radius: 0.01,
     tickRadiusMultiple: 20,

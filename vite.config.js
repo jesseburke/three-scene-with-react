@@ -6,13 +6,10 @@ export default defineConfig({
     base: '/u/jburke/',
     plugins: [reactRefresh()],
     build: {
-        rollupOptions: {
-            input: {
-                function_grapher: resolve(__dirname, 'examples/function-grapher/index.html')
-            },
-            output: {
-                dir: 'dist'
-            }
+        lib: {
+            entry: 'index.js',
+            formats: ['es'],
+            fileName: 'output'
         }
     },
     optimizeDeps: {

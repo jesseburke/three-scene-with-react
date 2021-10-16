@@ -1,3 +1,6 @@
+import * as THREE from 'three';
+export { THREE };
+
 export { default as Arrow } from './components/Arrow';
 export { default as ArrowGrid } from './components/ArrowGrid';
 export { default as Axes2D } from './components/Axes2D';
