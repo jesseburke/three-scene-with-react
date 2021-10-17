@@ -31,3 +31,6 @@ export { default as gsapReflect } from './animations/gsapReflect';
 export { default as gsapRotate } from './animations/gsapRotate';
 export { default as gsapTextAnimation } from './animations/gsapTextAnimation';
 export { default as gsapTranslate } from './animations/gsapTranslate';
+
+export { default as LineDataComp } from './data-components/LineData';
+export { default as Line2dFactory, OriginLineFromSlope } from './data-components/Line2DFactory';
