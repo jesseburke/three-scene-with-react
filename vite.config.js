@@ -10,6 +10,11 @@ export default defineConfig({
             entry: 'index.js',
             formats: ['es'],
             fileName: 'output'
+        },
+        rollupOptions: {
+            // make sure to externalize deps that shouldn't be bundled
+            // into your library
+            external: ['react', 'three', 'jotai']
         }
     },
     optimizeDeps: {
