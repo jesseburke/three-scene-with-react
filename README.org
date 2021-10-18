@@ -1,29 +1,46 @@
 Small personal library I use to write [[https://threejs.org][Three.js]] scenes, declaratively, using
-[[https://reactjs.org][React]] and the atomic state managment library [[https://github.com/pmndrs/jotai][jotai]]. Used in the apps...
+[[https://reactjs.org][React]] and the atomic state managment library [[https://github.com/pmndrs/jotai][jotai]].
+
+A small example app is
+[[https://jesseburke.org/apps/three-scene-with-react-example/]]. 
 
 * How does it work?
   
   ThreeScene is a React component, whose underlying html element is the
-  canvas that Three renders into. The following example...
+  canvas that Three renders into. For instance, the example app has
+  the form:
+  #+begin_src javascript
+   <div>
+      <main>
+	  <ThreeSceneComp>
+	      <Axes3D />
+	      <Grid/>
+	      <FunctionGraph3D/>
+	      <CameraControls />
+	  </ThreeSceneComp>
+	  <CameraInputComp />
+      </main>
+  </div>
+  #+end_src
 
-
-  ThreeScene sets up... (more details)
-
-  Children of ThreeScene are passed useThreeCBs...
-
-  Some components provided, but
+  ThreeSceneComp sets up the basics needed to render a ThreeJS scene,
+  including a camera, renderer, etc. They are stored in a function
+  closure that is accessible to all children of ThreeSceneComp under
+  the object useThreeCBs.
 
   Components have a lot of flexibility in how they respond to changes
   in the data. For instance, if a certain mesh with a very complicated
   geometry takes color as a prop, the component can be written to keep
   the geometry and only the change the material of the mesh, when the
-  color prop changes. This is also useful...for
-  animation... (example?)
-  
+  color prop changes.
   
 * Other features
 
 ** Camera debug
+
+   Shows second screen, with second camera, that lets user observe the
+   first camera's position in relation to the scene; see the example
+   app.
 
 ** Photos
 
@@ -32,6 +49,5 @@ Small personal library I use to write [[https://threejs.org][Three.js]] scenes, 
 ** Mouse picking
 
 ** Controls interactions
-   camera interactivity?
 
 

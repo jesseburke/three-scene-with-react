@@ -12,7 +12,8 @@
     "dependencies": {
         "delaunator": "^5.0.0",
         "emotion": "^10.0.27",
-        "@jesseburke/math-utils": "^0.0.0"
+        "@jesseburke/math-utils": "^0.0.0",
+        "@jesseburke/three-scene-with-react": "^0.0.16"
     },
     "peerDependencies": {
         "jotai": ">=0.16.8",
