@@ -3,8 +3,6 @@ import * as THREE from 'three';
 
 import { atom, useAtom } from 'jotai';
 
-import { Input } from '@jesseburke/components';
-
 import Line2dFactory from './Line2DFactory.jsx';
 
 // pt1 and pt2 are Three.Vector3's, with z component assumed to be 0
@@ -111,4 +109,50 @@ export default function LineData({ pt1Atom = defaultPt1Atom, pt2Atom = defaultPt
     }
 
     return { pt1Atom, pt2Atom, lineDataAtom, setEqAtom, component };
+}
+
+function Input({ onC, initValue, size = 10 }) {
+    const inputElt = useRef(null);
+
+    const handleBlur = useCallback(
+        (event) => {
+            if (onC) {
+                onC(event.target.value);
+            }
+        },
+        [onC]
+    );
+
+    const handleKey = useCallback(
+        (event) => {
+            if (event.key === 'Enter') {
+                inputElt.current.blur();
+            } else if (event.key === 'Escape') {
+                inputElt.current.value = initValue;
+            }
+        },
+        [initValue]
+    );
+
+    // want this to run every time?
+    // e.g., an input is normalized to always be 1 (e.g., the coeff in
+    // eq of a line), but still need to change the input value,
+    // because user may have changed it
+    useEffect(() => {
+        if (!inputElt.current) return;
+
+        inputElt.current.value = initValue;
+    });
+
+    return (
+        <input
+            className='text-black px-1 rounded-sm border-2 border-gray-800'
+            type='text'
+            onBlur={handleBlur}
+            onKeyDown={handleKey}
+            size={size}
+            defaultValue={initValue}
+            ref={inputElt}
+        />
+    );
 }

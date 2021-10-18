@@ -1,7 +1,5 @@
 import * as THREE from 'three';
 
-import { round } from '@jesseburke/basic-utils';
-
 export default function Line2dFactory(pt1, pt2 = new THREE.Vector3(0, 0, 0), roundPlace = 2) {
     if (pt1.x === pt2.x && pt1.y === pt2.y) {
         console.log('LineFactory called with two points equal to each other');
@@ -183,4 +181,10 @@ export function OriginLineFromSlope(m) {
     if (m === Infinity || m === -Infinity) return Line2dFactory(new THREE.Vector3(0, 1, 0));
 
     return Line2dFactory(new THREE.Vector3(1, m, 0));
+}
+
+export function round(x, n = 2) {
+    // x = -2.336596841557143
+
+    return Math.round(x * Math.pow(10, n)) / Math.pow(10, n);
 }

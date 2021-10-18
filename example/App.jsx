@@ -14,7 +14,7 @@ import {
 
 import { Input } from '@jesseburke/components';
 
-import '../../styles.css';
+import '../styles.css';
 
 const initAxesData = {
     radius: 0.01,

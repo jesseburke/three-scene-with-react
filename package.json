@@ -1,8 +1,8 @@
 {
     "name": "@jesseburke/three-scene-with-react",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "description": "",
-    "main": "index.js",
+    "main": "dist/output.es.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "vite build"
@@ -12,12 +12,13 @@
     "dependencies": {
         "delaunator": "^5.0.0",
         "emotion": "^10.0.27",
-        "@jesseburke/math-utils": "^0.0.0",
-        "three": "^0.125.2"
+        "@jesseburke/math-utils": "^0.0.0"
     },
     "peerDependencies": {
         "jotai": ">=0.16.8",
-        "react": ">=17.0.2"
+        "react": ">=17.0.2",
+        "three": ">=0.125.2",
+        "gsap": ">=3.6.0"
     },
     "devDependencies": {
         "autoprefixer": "^10.3.4",
