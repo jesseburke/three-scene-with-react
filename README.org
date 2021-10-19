@@ -6,7 +6,7 @@ A small example app is
 
 * How does it work?
   
-  ThreeScene is a React component, whose underlying html element is the
+  ThreeSceneComp is a React component, whose underlying html element is the
   canvas that Three renders into. For instance, the example app has
   the form:
   #+begin_src javascript
